@@ -1,6 +1,7 @@
 <div id="contenu">
     <h1>Ajouter un nouveau jeu</h1>
     <form action="/jeux/valider_ajout" method="post">
+
         <div>
             <label for="jeu_nom">Nom du jeu :</label>
             <input type="text" name="jeu_nom" id="jeu_nom" required>

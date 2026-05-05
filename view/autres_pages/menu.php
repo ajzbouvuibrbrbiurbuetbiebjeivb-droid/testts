@@ -16,3 +16,4 @@
             <a href="/messagerie/nouveau_message">Nouveau message</a>
         <?php endif; ?>
     </nav>
+</header>

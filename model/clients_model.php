@@ -1,39 +1,35 @@
 <?php
-
-// On crée une fonction pour récupérer les jeux, cette fonction est appelée par le contrôleur
+require_once('conf/conf.inc.php');
 
 function getClients()
 {
-    $jeux = json_decode(file_get_contents('data/clients.json'), true);
-    return $jeux;
+    $pdo = new PDO('mysql:host='.HOST.';dbname='.DBNAME, USER, PASSWORD);
+    $stmt = $pdo->prepare("SELECT * FROM clients");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 function getClientsAlphabetiques()
 {
-    $clients = getClients();
-    usort($clients, function($a, $b) {
-        return strcmp($a['client_nom'], $b['client_nom']);
-    });
-    return $clients;
+    $pdo = new PDO('mysql:host='.HOST.';dbname='.DBNAME, USER, PASSWORD);
+    $stmt = $pdo->prepare("SELECT * FROM clients ORDER BY client_nom ASC");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getQuatreClients()
 {
-    $clients = getClients();
-    return array_slice($clients, 0, 4);
+    $pdo = new PDO('mysql:host='.HOST.';dbname='.DBNAME, USER, PASSWORD);
+    $stmt = $pdo->prepare("SELECT * FROM clients LIMIT 4");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// cette fonction est à mettre après la fonction quatre dans le modele clients
 function verif_utilisateur($client_mail)
 {
-    //on recupere les client avec la fonction getClients.
-    $clients = getClients();
-
-    // Parcourir les clients pour trouver une correspondance
-    foreach ($clients as $client) {
-        if ($client['client_email'] === $client_mail) {
-            return $client; // Retourner les informations du client si trouvé
-        }
-    }
-
-    return null; // Retourner null si aucun client n'est trouvé
+    $pdo = new PDO('mysql:host='.HOST.';dbname='.DBNAME, USER, PASSWORD);
+    $stmt = $pdo->prepare("SELECT * FROM clients WHERE client_email = :email");
+    $stmt->bindParam(':email', $client_mail);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
